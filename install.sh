@@ -1,0 +1,1 @@
+ln -s ~/Documents/cjs-bot/ ~/.local/lib/python3.8/site-packages/cjsbot
