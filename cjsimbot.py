@@ -4,26 +4,40 @@ import logging
 from telegram import Bot
 
 class CjsBot:
-    __location_key = '/home/augusto/.telegramapi/key'
-    __location_id = '/home/augusto/.telegramapi/id'
+    
+
     def __init__(self):
-        token = open(self.__location_key).read()
-        self.id_user = int(open(self.__location_id).read())
-        self.bot = Bot(token = token)
-        self.updater = Updater(token=token, use_context=True)
+        location_key = '/home/augusto/.telegramapi/key'
+        location_id = '/home/augusto/.telegramapi/id'
+        token = open(location_key).read()
+        self.id_user = int(open(location_id).read())
+        self.bot = Bot(token)
+        self.updater = Updater(token, use_context=True)
         self.dispatcher = self.updater.dispatcher
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
-        
-        #start_handler = CommandHandler('start', start)
-        #dispatcher.add_handler(start_handler)
+        self.commands = {}
 
-    def start(self, updater):
-        updater.start_polling()
+
+    def start(self):
+        self.updater.stop()
+        self.create_commandMessages()
+        self.updater.start_polling()
     
+    def create_commandMessages(self):
+        if self.commands == {}: return False
+        for command in self.commands.keys():
+            handler = CommandHandler(command, lambda update,context: 
+                context.bot.send_message(chat_id=update.effective_chat.id, text=self.commands[command]))
+            self.dispatcher.add_handler(handler)
+
+   
+    def add_commandMessage(self, command, message):
+        self.commands[command] = message
     
     def send_message(self, message):
         self.bot.send_message(self.id_user, message)
+    
     
         
 
