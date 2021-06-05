@@ -1,23 +1,18 @@
-from telegram.ext import Updater
-from telegram.ext import CommandHandler
+from telegram.ext import Updater,InlineQueryHandler, CommandHandler, MessageHandler, Filters
 import logging
 from telegram import Bot
 
 class CjsBot:
-    
-
     def __init__(self):
-        location_key = '/home/augusto/.telegramapi/key'
-        location_id = '/home/augusto/.telegramapi/id'
+        location_key = '/home/augusto/.telegramapi/key' # key do bot
+        location_id = '/home/augusto/.telegramapi/id' # identificador do seu chat
         token = open(location_key).read()
         self.id_user = int(open(location_id).read())
         self.bot = Bot(token)
         self.updater = Updater(token, use_context=True)
-        self.dispatcher = self.updater.dispatcher
+        self.dp = self.updater.dispatcher
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
-        self.commands = {}
-
 
     def start(self):
         self.updater.stop()
@@ -31,14 +26,13 @@ class CjsBot:
                 context.bot.send_message(chat_id=update.effective_chat.id, text=self.commands[command]))
             self.dispatcher.add_handler(handler)
 
-   
+    """
     def add_commandMessage(self, command, message):
         self.commands[command] = message
-    
+    """
+        
     def send_message(self, message):
         self.bot.send_message(self.id_user, message)
-    
-    
         
 
 
